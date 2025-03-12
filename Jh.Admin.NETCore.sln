@@ -4,14 +4,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Admin.NETCore.API", "Admin.NETCore.API\Admin.NETCore.API.csproj", "{C0BA9C17-9F36-4A9B-9A01-6B58CA61410E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Admin.NETCore.BLL", "Admin.NETCore.BLL\Admin.NETCore.BLL.csproj", "{C885E268-7A60-4BDE-A1FD-84D594F029B9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D4336A7A-D372-4723-B997-BD4341C40D46} = {D4336A7A-D372-4723-B997-BD4341C40D46}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Admin.NETCore.Common", "Admin.NETCore.Common\Admin.NETCore.Common.csproj", "{D4336A7A-D372-4723-B997-BD4341C40D46}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Admin.NETCore.DAL", "Admin.NETCore.DAL\Admin.NETCore.DAL.csproj", "{1B41DE27-6B6B-4214-8126-04BE4E6D9B3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Admin.NETCore.Core", "Admin.NETCore.Core\Admin.NETCore.Core.csproj", "{99C1BD12-0ACF-4342-ACFA-948394906594}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Admin.NETCore.Models", "Admin.NETCore.Models\Admin.NETCore.Models.csproj", "{24907586-9F9B-4FE0-BA9E-55722DC036E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Admin.NETCore.Infrastructure", "Admin.NETCore.Infrastructure\Admin.NETCore.Infrastructure.csproj", "{C7C35EE1-19A8-403D-9B80-86B9A02AAF30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,22 +24,18 @@ Global
 		{C0BA9C17-9F36-4A9B-9A01-6B58CA61410E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0BA9C17-9F36-4A9B-9A01-6B58CA61410E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0BA9C17-9F36-4A9B-9A01-6B58CA61410E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C885E268-7A60-4BDE-A1FD-84D594F029B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C885E268-7A60-4BDE-A1FD-84D594F029B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C885E268-7A60-4BDE-A1FD-84D594F029B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C885E268-7A60-4BDE-A1FD-84D594F029B9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D4336A7A-D372-4723-B997-BD4341C40D46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D4336A7A-D372-4723-B997-BD4341C40D46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4336A7A-D372-4723-B997-BD4341C40D46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4336A7A-D372-4723-B997-BD4341C40D46}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1B41DE27-6B6B-4214-8126-04BE4E6D9B3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1B41DE27-6B6B-4214-8126-04BE4E6D9B3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1B41DE27-6B6B-4214-8126-04BE4E6D9B3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1B41DE27-6B6B-4214-8126-04BE4E6D9B3E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{24907586-9F9B-4FE0-BA9E-55722DC036E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{24907586-9F9B-4FE0-BA9E-55722DC036E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{24907586-9F9B-4FE0-BA9E-55722DC036E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{24907586-9F9B-4FE0-BA9E-55722DC036E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99C1BD12-0ACF-4342-ACFA-948394906594}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99C1BD12-0ACF-4342-ACFA-948394906594}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99C1BD12-0ACF-4342-ACFA-948394906594}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99C1BD12-0ACF-4342-ACFA-948394906594}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7C35EE1-19A8-403D-9B80-86B9A02AAF30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7C35EE1-19A8-403D-9B80-86B9A02AAF30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7C35EE1-19A8-403D-9B80-86B9A02AAF30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7C35EE1-19A8-403D-9B80-86B9A02AAF30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

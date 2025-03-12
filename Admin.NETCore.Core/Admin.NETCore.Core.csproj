@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Admin.NETCore.Common\Admin.NETCore.Common.csproj" />
-    <ProjectReference Include="..\Admin.NETCore.Models\Admin.NETCore.Models.csproj" />
+    <ProjectReference Include="..\Admin.NETCore.Infrastructure\Admin.NETCore.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

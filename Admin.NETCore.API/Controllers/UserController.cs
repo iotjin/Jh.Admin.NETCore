@@ -1,76 +1,70 @@
-﻿using Admin.NETCore.BLL.Interfaces;
-using Admin.NETCore.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using Admin.NETCore.Core.Interfaces;
+using Admin.NETCore.Core.ViewModels;
+using Admin.NETCore.Core.ViewModels.Base;
+using Admin.NETCore.Infrastructure.DB.Entities;
 
 namespace Admin.NETCore.API.Controllers
 {
+
     [ApiController]
     [Route("api/[controller]/[action]")]
     //[Route("api/[controller]")]  //restful 风格
     public class UserController : ControllerBase
     {
-        private readonly IUserBLL userBLL;
+        private readonly IUserService _userService;
 
-        public UserController(IUserBLL usersBLL)
+        public UserController(IUserService userService)
         {
-            userBLL = usersBLL;
-        }
-
-        public class TestModel
-        {
-            public int Id { get; set; }
-            public string? Name { get; set; }
-        }
-
-        [HttpGet]
-        public object[] GetTest1()
-        {
-            var tempArr = new[] {
-                new { Id = 1, Name = "Name1" },
-                new { Id = 2, Name = "Name2" }
-            };
-            return tempArr;
-        }
-
-        [HttpGet]
-        public IEnumerable<TestModel> GetTest2()
-        {
-            var tempArr = new List<TestModel> {
-                new TestModel { Id = 1, Name = "Name1" },
-                new TestModel{ Id = 2, Name = "Name2" }
-            };
-            return tempArr;
-        }
-
-        [HttpGet]
-        public List<User> GetUserList()
-        {
-            var tempArr = userBLL.GetUserList();
-            return tempArr;
-        }
-
-        [HttpGet]
-        public User? GetUserById([Required(ErrorMessage = "User ID is required.")] string id)
-        {
-            if (string.IsNullOrEmpty(id))
-            {
-                return null;
-            }
-            var user = userBLL.GetUserById(id);
-            return user;
+            _userService = userService;
         }
 
         [HttpPost]
-        public string SaveUser(User user)
+        public async Task<ApiResult<UserVModel>> CreateUserAsync(UserVModel model)
         {
-            return userBLL.SaveUser(user);
+            if (string.IsNullOrEmpty(model.LoginName))
+            {
+                return ApiResult<UserVModel>.FailResult("用户名不能为空");
+            }
+            return await _userService.CreateUserAsync(model);
         }
 
-        [HttpDelete]
-        public string DeleteUserById([Required(ErrorMessage = "User ID is required.")] string id)
+
+        [HttpPost]
+        public async Task<ApiResult<UserVModel>> UpdateUserAsync(UserVModel model)
         {
-            return userBLL.DeleteUserById(id);
+            if (string.IsNullOrEmpty(model.LoginName))
+            {
+                return ApiResult<UserVModel>.FailResult("用户名不能为空");
+            }
+            return await _userService.UpdateUserAsync(model);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ApiResult<UserVModel>> GetUserByIdAsync(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return ApiResult<UserVModel>.FailResult("id不能为空");
+            }
+            return await _userService.GetUserByIdAsync(id);
+        }
+
+        [HttpPost]
+        public async Task<ApiResult<string>> DeleteUserByIdAsync([FromBody] BaseRequest request)
+        {
+            if (string.IsNullOrEmpty(request.Id))
+            {
+                return ApiResult<string>.FailResult("id不能为空");
+            }
+            return await _userService.DeleteUserByIdAsync(request.Id);
+        }
+
+        [HttpGet]
+        public async Task<PagedResult<User>> GetUserListAsync([FromQuery] UserFilterModel filter)
+        {
+            return await _userService.GetUserListAsync(filter);
+        }
+
     }
 }
