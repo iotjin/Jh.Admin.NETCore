@@ -67,3 +67,35 @@ namespace Admin.NETCore.API.ServiceExtensions
         }
     }
 }
+
+
+
+
+/* 
+  数据库配置
+ 
+ 
+ // 添加数据库上下文
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//    options.UseMySql(
+//        builder.Configuration.GetConnectionString("DefaultConnection"),
+//        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
+//    ));
+
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+//        new MySqlServerVersion(new Version(8, 0, 21))));
+
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//  指定迁移程序集
+
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//    options.UseMySql(
+//        builder.Configuration.GetConnectionString("DefaultConnection"),
+//        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection")),
+//        x => x.MigrationsAssembly(Assembly.GetExecutingAssembly().GetName().Name)
+//    ));
+ 
+ */

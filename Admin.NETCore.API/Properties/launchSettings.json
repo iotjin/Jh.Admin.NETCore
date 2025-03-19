@@ -1,8 +1,8 @@
 ﻿{
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
+    "windowsAuthentication": false, // 是否启用windows身份验证
+    "anonymousAuthentication": true, // 是否启用匿名身份验证
     "iisExpress": {
       "applicationUrl": "http://localhost:48570",
       "sslPort": 0
@@ -13,10 +13,12 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      //"launchUrl": "swagger",
+      "launchUrl": "", // 在swagger配置中动态处理根路径重定向
       "applicationUrl": "http://localhost:5276",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
+        //"ASPNETCORE_ENVIRONMENT": "Production"
       }
     },
     "IIS Express": {
