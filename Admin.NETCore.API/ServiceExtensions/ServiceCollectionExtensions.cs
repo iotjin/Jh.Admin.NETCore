@@ -28,6 +28,7 @@ namespace Admin.NETCore.API.ServiceExtensions
             services.AddCorsPolicy();
 
             services.AddSwaggerConfig();
+            // services.AddSwaggerConfig22();
 
             return services;
         }

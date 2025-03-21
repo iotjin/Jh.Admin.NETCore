@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Admin.NETCore.API.Controllers.version
+namespace Admin.NETCore.API.Controllers.Version
 {
 
     [ApiController]

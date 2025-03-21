@@ -12,6 +12,7 @@ namespace Admin.NETCore.API.ServiceExtensions
 
             // Swagger
             app.UseCustomSwaggerUI();
+            //app.UseCustomSwaggerUI22();
 
             if (app.Environment.IsDevelopment())
             {

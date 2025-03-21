@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Admin.NETCore.API.Controllers
+namespace Admin.NETCore.API.Controllers.Version
 {
     // [Obsolete("🚨 此控制器已废弃，请使用 v2")] // 若希望所有继承自 V1BaseController 的子类自动标记为废弃，可通过自定义过滤器实现。InheritedObsoleteOperationFilter
     public class TestV1Controller : V1BaseController

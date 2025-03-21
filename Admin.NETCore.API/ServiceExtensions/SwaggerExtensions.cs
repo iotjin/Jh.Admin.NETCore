@@ -2,6 +2,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
+// 通过[ApiExplorerSettings(GroupName = "v1")] 实现
 namespace Admin.NETCore.API.ServiceExtensions
 {
     public static class SwaggerExtensions
@@ -70,7 +71,7 @@ namespace Admin.NETCore.API.ServiceExtensions
                 app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v2/swagger.json", "versionV2"); // 这个顺序影响swagger select a definition 默认选中
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "versionV1");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "versionV1 (Deprecated)");
                     // API 文档的默认展开方式
                     c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List); // 展开分组
                     //c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None); // 默认折叠
