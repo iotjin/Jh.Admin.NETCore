@@ -13,6 +13,11 @@ namespace Admin.NETCore.Infrastructure.DB
         }
 
         public DbSet<User> User { get; set; } //  DbSet<模型> 表名
+        public DbSet<Role> Role { get; set; }
+        public DbSet<UserRole> UserRole { get; set; }
+
+
+
 
         // 在Program.cs 配置
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -65,6 +70,9 @@ namespace Admin.NETCore.Infrastructure.DB
 }
 
 /* 
+ 
+ Migration的一些命令(因为在Program中配置了 MigrationsAssembly对应的项目，这里放在配置的项目路径下) 
+
 
  工具>NuGet 包管理器 > 程序包管理器控制台
 

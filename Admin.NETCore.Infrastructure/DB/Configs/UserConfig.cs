@@ -30,6 +30,7 @@ namespace Admin.NETCore.Infrastructure.DB.configs
 
 
 
+            // 公共属性配置
             builder.Property(e => e.CreateBy).IsRequired(false).HasMaxLength(10).HasColumnName("CreateBy");
             builder.Property(e => e.UpdateBy).IsRequired(false).HasMaxLength(10).HasColumnName("UpdateBy");
 

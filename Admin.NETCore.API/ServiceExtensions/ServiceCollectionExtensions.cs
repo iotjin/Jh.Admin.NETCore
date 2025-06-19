@@ -1,5 +1,6 @@
 ﻿using Admin.NETCore.API.Identity.filters;
 using Admin.NETCore.Core.Interfaces;
+using Admin.NETCore.Core.Services;
 using Admin.NETCore.Infrastructure.DB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +48,7 @@ namespace Admin.NETCore.API.ServiceExtensions
                    ));
 
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRoleService, RoleService>();
             return services;
         }
 

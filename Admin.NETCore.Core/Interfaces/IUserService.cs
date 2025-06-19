@@ -11,6 +11,7 @@ namespace Admin.NETCore.Core.Interfaces
         Task<ApiResult<UserVModel>> UpdateUserAsync(UserVModel model);
         Task<ApiResult<UserVModel>> GetUserByIdAsync(string id);
         Task<ApiResult<string>> DeleteUserByIdAsync(string id);
-        Task<PagedResult<User>> GetUserListAsync(UserFilterModel filter);
+        Task<PagedResult<UserDTO>> GetUserListAsync(UserFilterModel filter);
+        Task<ApiResult<string>> AssignRoleAsync(string userId, List<string> roleIds);
     }
 }
