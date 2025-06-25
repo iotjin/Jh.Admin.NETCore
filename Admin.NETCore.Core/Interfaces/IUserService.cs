@@ -1,7 +1,6 @@
 ﻿
 using Admin.NETCore.Core.ViewModels;
 using Admin.NETCore.Core.ViewModels.Base;
-using Admin.NETCore.Infrastructure.DB.Entities;
 
 namespace Admin.NETCore.Core.Interfaces
 {

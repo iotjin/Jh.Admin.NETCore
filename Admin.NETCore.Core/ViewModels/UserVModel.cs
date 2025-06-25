@@ -1,5 +1,4 @@
 ﻿using Admin.NETCore.Core.ViewModels.Base;
-using Admin.NETCore.Infrastructure.DB.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace Admin.NETCore.Core.ViewModels

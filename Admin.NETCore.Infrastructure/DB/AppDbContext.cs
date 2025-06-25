@@ -5,6 +5,9 @@ using Admin.NETCore.Infrastructure.DB.Entities;
 
 namespace Admin.NETCore.Infrastructure.DB
 {
+    /// <summary>
+    /// 应用数据库上下文，用于管理 EF Core 与数据库之间的交互
+    /// </summary>
     public class AppDbContext : DbContext
     {
 
@@ -12,6 +15,12 @@ namespace Admin.NETCore.Infrastructure.DB
         {
         }
 
+        /*
+             用户表（User 实体）对应的数据集合，AppDbContext 可以对 User 实体进行增删查改操作
+
+             DbSet<T> 是 EF Core 中用于操作某个实体类型的集合
+             放在 AppDbContext 中，EF Core 会自动识别这些属性，对应到数据库的表，进行 Code First 映射
+         */
         public DbSet<User> User { get; set; } //  DbSet<模型> 表名
         public DbSet<Role> Role { get; set; }
         public DbSet<UserRole> UserRole { get; set; }
@@ -19,7 +28,11 @@ namespace Admin.NETCore.Infrastructure.DB
 
 
 
-        // 在Program.cs 配置
+        /*
+         * 数据库配置建议在 Program.cs 中完成（使用依赖注入方式）
+         * 如果在这里同时使用 OnConfiguring，会导致配置冲突或冗余。
+         * 所以此处注释掉 OnConfiguring 方法
+         */
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
         //    // 数据库连接字符串
@@ -29,8 +42,12 @@ namespace Admin.NETCore.Infrastructure.DB
         //     base.OnConfiguring(optionsBuilder);
         //}
 
+        /// <summary>
+        /// 模型构建方法，用于配置实体与数据库的映射关系
+        /// </summary>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // ❎ 下面是手动配置实体属性的示例，仅供参考，实际建议写在单独的配置类中
             //modelBuilder.Entity<User>().Property(e => e.Name)
             //    .IsRequired()
             //    .HasComment("备注");
@@ -58,11 +75,12 @@ namespace Admin.NETCore.Infrastructure.DB
 
             base.OnModelCreating(modelBuilder);
 
-            //方式一. 分开注册
+            //方式一. 分开注册, 逐个添加实体的配置类
             //modelBuilder.Configurations.Add(new UserConfig());
             //modelBuilder.Configurations.Add(new RoleConfig());
 
             //方式二. 一次性加载所有Fluent API的配置
+            // ✅ 推荐方式：统一加载所有 IEntityTypeConfiguration 的配置类（如 UserConfig、RoleConfig 等）
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
