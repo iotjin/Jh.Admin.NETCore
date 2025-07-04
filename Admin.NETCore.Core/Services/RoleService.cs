@@ -1,6 +1,4 @@
-﻿
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Admin.NETCore.Common.Configs;
 using Admin.NETCore.Core.Interfaces;
 using Admin.NETCore.Core.ViewModels;
@@ -50,6 +48,7 @@ namespace Admin.NETCore.Core.Services
                 Id = Guid.NewGuid().ToString(),
                 Name = model.Name,
                 Code = model.Code,
+                Status = model.Status,
                 Builtin = model.Builtin,
                 Notes = model.Notes,
                 IsDelete = false
@@ -57,82 +56,81 @@ namespace Admin.NETCore.Core.Services
             await _context.Role.AddAsync(dbModel);
             await _context.SaveChangesAsync();
 
-            var returnModel = model;
-            returnModel.Id = dbModel.Id;
-            return ApiResult<RoleVModel>.SuccessResult(returnModel, "角色创建成功");
+            model.Id = dbModel.Id;
+            return ApiResult<RoleVModel>.SuccessResult(model, "角色创建成功");
         }
 
         public async Task<ApiResult<RoleVModel>> UpdateRoleAsync(RoleVModel model)
         {
-            var role = await _context.Role.FindAsync(model.Id);
-            if (role == null)
+            var existModel = await _context.Role.FindAsync(model.Id);
+            if (existModel == null)
             {
                 return ApiResult<RoleVModel>.FailResult("角色不存在");
             }
             // 检查name、code是否与其他角色重复
             if (await _context.Role.AnyAsync(m => m.Name == model.Name && m.Id != model.Id))
             {
-                return ApiResult<RoleVModel>.FailResult("角色名已存在");
+                return ApiResult<RoleVModel>.FailResult("Name已存在");
             }
             if (await _context.Role.AnyAsync(m => m.Code == model.Code && m.Id != model.Id))
             {
                 return ApiResult<RoleVModel>.FailResult("Code已存在");
             }
 
-            role.Name = model.Name;
-            role.Code = model.Code;
-            role.Builtin = model.Builtin;
-            role.Notes = model.Notes;
-            role.IsDelete = false;
+            existModel.Name = model.Name;
+            existModel.Code = model.Code;
+            existModel.Status = model.Status;
+            existModel.Builtin = model.Builtin;
+            existModel.Notes = model.Notes;
+            existModel.IsDelete = false;
             await _context.SaveChangesAsync();
 
-            var returnModel = model;
-            returnModel.Id = role.Id;
-            return ApiResult<RoleVModel>.SuccessResult(returnModel, "角色更新成功");
+            return ApiResult<RoleVModel>.SuccessResult(model, "角色更新成功");
         }
 
         public async Task<ApiResult<string>> DeleteRoleByIdAsync(string id)
         {
-            var role = await _context.Role
-                .Include(u => u.UserRoles)
-                .FirstOrDefaultAsync(u => u.Id == id);
+            var existModel = await _context.Role
+                .Include(m => m.UserRoles)  // 不加Include会导致UserRoles为null
+                .FirstOrDefaultAsync(m => m.Id == id);
 
-            //var role = await _context.Role.FindAsync(id); // 不加Include会导致UserRoles为null
-            if (role == null)
+            //var existModel = await _context.Role.FindAsync(id);
+            if (existModel == null)
             {
                 return ApiResult<string>.FailResult("角色不存在");
             }
             // 内置角色不能删除
-            if (role.Builtin == 1)
+            if (existModel.Builtin == 1)
             {
                 return ApiResult<string>.FailResult("内置角色不能删除");
             }
-            if (role.UserRoles.Count > 0)
+            if (existModel.UserRoles.Count > 0)
             {
                 return ApiResult<string>.FailResult("已经分配用户的角色不能删除");
             }
 
-            _context.Role.Remove(role); // 物理删除
-            //role.IsDelete = true; // 逻辑删除
+            _context.Role.Remove(existModel); // 物理删除
+            // existModel.IsDelete = true; // 逻辑删除
             await _context.SaveChangesAsync();
             return ApiResult<string>.SuccessResult("", "角色删除成功");
         }
 
         public async Task<ApiResult<RoleVModel>> GetRoleByIdAsync(string id)
         {
-            var role = await _context.Role.FindAsync(id);
-            if (role == null)
+            var existModel = await _context.Role.FindAsync(id);
+            if (existModel == null)
             {
                 return ApiResult<RoleVModel>.FailResult("角色不存在");
             }
             var returnModel = new RoleVModel
             {
-                Id = role.Id,
-                Name = role.Name,
-                Code = role.Code,
-                Builtin = role.Builtin,
-                Notes = role.Notes,
-                IsDelete = role.IsDelete
+                Id = existModel.Id,
+                Name = existModel.Name,
+                Code = existModel.Code,
+                Status = existModel.Status,
+                Builtin = existModel.Builtin,
+                Notes = existModel.Notes,
+                IsDelete = existModel.IsDelete
             };
             return ApiResult<RoleVModel>.SuccessResult(returnModel);
         }
@@ -165,7 +163,7 @@ namespace Admin.NETCore.Core.Services
             int total = await query.CountAsync();
 
             // 分页查询
-            var roles = await query
+            var list = await query
                 .OrderByDescending(m => m.UpdateDate)
                 .Skip((filter.Page - 1) * filter.Limit)
                 .Take(filter.Limit)
@@ -175,11 +173,12 @@ namespace Admin.NETCore.Core.Services
                     Id = m.Id,
                     Name = m.Name,
                     Code = m.Code,
+                    Status = m.Status,
                     Builtin = m.Builtin,
                     Notes = m.Notes,
                 })
                 .ToListAsync();
-            return PagedResult<RoleListDTO>.SuccessResult(roles, total);
+            return PagedResult<RoleListDTO>.SuccessResult(list, total);
         }
 
 
@@ -212,20 +211,21 @@ namespace Admin.NETCore.Core.Services
                 .Select(m => m.RoleId)
                 .ToListAsync();
 
-            bool isAssigned = filter.Status == "1";
+            bool isAssigned = filter.AssignStatus == "1";
             query = query.Where(m => isAssigned == assignedRoleIds.Contains(m.Id));
 
-            var roles = await query
+            var list = await query
                  .Select(m => new RoleListDTO
                  {
                      Id = m.Id,
                      Name = m.Name,
                      Code = m.Code,
+                     Status = m.Status,
                      Builtin = m.Builtin,
                      Notes = m.Notes,
                  })
                 .ToListAsync();
-            return ApiResult<List<RoleListDTO>>.SuccessResult(roles);
+            return ApiResult<List<RoleListDTO>>.SuccessResult(list);
         }
     }
 }

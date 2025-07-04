@@ -6,7 +6,7 @@ namespace Admin.NETCore.Core.Interfaces
 {
     public interface IRoleService
     {
-        Task<ApiResult<RoleVModel>> CreateRoleAsync(RoleVModel role);
+        Task<ApiResult<RoleVModel>> CreateRoleAsync(RoleVModel model);
         Task<ApiResult<RoleVModel>> UpdateRoleAsync(RoleVModel model);
         Task<ApiResult<RoleVModel>> GetRoleByIdAsync(string id);
         Task<ApiResult<string>> DeleteRoleByIdAsync(string id);

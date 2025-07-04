@@ -2,13 +2,17 @@
 
 namespace Admin.NETCore.Core.ViewModels
 {
-    public class RoleListDTO : BaseModel
+    public class DictItemListDTO : BaseModel
     {
         public string Id { get; set; } = null!;
 
-        public string Name { get; set; } = null!;
+        public string Label { get; set; } = null!;
 
-        public string Code { get; set; } = null!;
+        public string Value { get; set; } = null!;
+
+        public string DictTypeCode { get; set; } = null!;
+
+        public int Sort { get; set; }
 
         public int Status { get; set; }
 

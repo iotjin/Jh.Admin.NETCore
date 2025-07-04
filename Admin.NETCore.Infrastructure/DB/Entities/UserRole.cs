@@ -8,7 +8,7 @@
         public string RoleId { get; set; } = null!;
         public Role Role { get; set; } = null!;
 
-        public int Status { get; set; }  // 分配状态(1：已分配，0：未分配)
+        public int AssignStatus { get; set; }  // 分配状态(1：已分配，0：未分配)
 
         public DateTime AssignedDate { get; set; } = DateTime.UtcNow; // 分配时间
 

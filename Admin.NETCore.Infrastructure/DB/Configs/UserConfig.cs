@@ -22,7 +22,7 @@ namespace Admin.NETCore.Infrastructure.DB.configs
             builder.Property(e => e.UserNumber).HasMaxLength(8).IsRequired();  // 数值类型（如 int）无法添加长度限制，此处HasMaxLength不生效
             builder.Property(e => e.DeptId).IsRequired(); // 不设置长度，类型为longtext
             builder.Property(e => e.UserExpiryDate).HasMaxLength(10).IsRequired(); // DateTime类型，无法添加长度限制，此处HasMaxLength不生效
-            builder.Property(e => e.Status).IsRequired();
+            builder.Property(e => e.Status).HasMaxLength(1).IsRequired();
             builder.Property(e => e.Level).IsRequired();
             builder.Property(e => e.Money).IsRequired(false);
             builder.Property(e => e.Age).IsRequired(false).HasAnnotation("Age", "^[1-9][0-9]*$");
@@ -47,7 +47,7 @@ namespace Admin.NETCore.Infrastructure.DB.configs
                 .HasColumnName("UpdateDate")
                 .HasColumnType("DATETIME(6)")
                 .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)") // 
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
                 .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Save);
 
             //builder.Ignore(e => e.CreateTime);// 设置某字段不映射到数据表

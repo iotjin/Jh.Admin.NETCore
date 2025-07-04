@@ -13,6 +13,8 @@
 
         public int Builtin { get; set; }  // 是否内置角色（1：是，0：否）
 
+        public int Status { get; set; }  // 状态（1：启用，0：停用）
+
         public string? Notes { get; set; }  // 备注，最多100个字符
 
 

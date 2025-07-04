@@ -44,7 +44,7 @@ namespace Admin.NETCore.Infrastructure.DB.configs
             // 属性配置
             builder.Property(e => e.UserId).HasMaxLength(36).IsRequired();
             builder.Property(e => e.RoleId).HasMaxLength(36).IsRequired();
-            builder.Property(e => e.Status).IsRequired().HasComment("分配状态(1：已分配，0：未分配)");
+            builder.Property(e => e.AssignStatus).IsRequired().HasComment("分配状态(1：已分配，0：未分配)");
 
 
 
@@ -65,7 +65,7 @@ namespace Admin.NETCore.Infrastructure.DB.configs
                 .HasColumnName("UpdateDate")
                 .HasColumnType("DATETIME(6)")
                 .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)") // 
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
                 .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Save);
 
             //builder.Ignore(e => e.CreateTime);// 设置某字段不映射到数据表

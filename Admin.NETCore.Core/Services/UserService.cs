@@ -1,6 +1,4 @@
-﻿
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Admin.NETCore.Common.Configs;
 using Admin.NETCore.Core.Interfaces;
 using Admin.NETCore.Core.ViewModels;
@@ -49,9 +47,8 @@ namespace Admin.NETCore.Core.Services
             await _context.User.AddAsync(dbModel);
             await _context.SaveChangesAsync();
 
-            var returnModel = model;
-            returnModel.Id = dbModel.Id;
-            return ApiResult<UserVModel>.SuccessResult(returnModel, "用户创建成功");
+            model.Id = dbModel.Id;
+            return ApiResult<UserVModel>.SuccessResult(model, "用户创建成功");
         }
 
         public async Task<ApiResult<UserVModel>> UpdateUserAsync(UserVModel model)
@@ -193,10 +190,10 @@ namespace Admin.NETCore.Core.Services
         public async Task<ApiResult<string>> AssignRoleAsync(string userId, List<string> roleIds)
         {
             var user = await _context.User
-                .Include(u => u.UserRoles)
-                .FirstOrDefaultAsync(u => u.Id == userId);
+                .Include(m => m.UserRoles)  // 不加Include会导致UserRoles为null
+                .FirstOrDefaultAsync(m => m.Id == userId);
 
-            //var user = await _context.User.FindAsync(userId); // 不加Include会导致UserRoles为null
+            //var user = await _context.User.FindAsync(userId);
             if (user == null)
             {
                 return ApiResult<string>.FailResult("用户不存在");
@@ -210,7 +207,7 @@ namespace Admin.NETCore.Core.Services
             {
                 UserId = userId,
                 RoleId = roleId,
-                Status = 1,
+                AssignStatus = 1,
                 AssignedDate = DateTime.UtcNow
             });
 

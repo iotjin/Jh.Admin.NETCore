@@ -25,6 +25,9 @@ namespace Admin.NETCore.Infrastructure.DB
         public DbSet<Role> Role { get; set; }
         public DbSet<UserRole> UserRole { get; set; }
 
+        public DbSet<DictType> DictType { get; set; }
+        public DbSet<DictItem> DictItem { get; set; }
+
 
 
 
@@ -95,7 +98,7 @@ namespace Admin.NETCore.Infrastructure.DB
  工具>NuGet 包管理器 > 程序包管理器控制台
 
  Add-Migration Init 
- update-database 
+ Update-Database 
 
 指定 Migration 路径
 

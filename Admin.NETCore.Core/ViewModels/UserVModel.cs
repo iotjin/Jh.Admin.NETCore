@@ -8,14 +8,16 @@ namespace Admin.NETCore.Core.ViewModels
         public string? Id { get; set; }
 
         [Required(ErrorMessage = "Name不能为空")]
+        [StringLength(10, MinimumLength = 1, ErrorMessage = "Name长度必须在1-10个字符范围内")]
         public string Name { get; set; } = null!;
 
         [Required(ErrorMessage = "LoginName不能为空")]
+        [StringLength(10, MinimumLength = 1, ErrorMessage = "LoginName长度必须在1-10个字符范围内")]
         public string LoginName { get; set; } = null!;
 
         //[MaxLength(11, ErrorMessage = "Phone必须为11位")]
         //[MinLength(11, ErrorMessage = "Phone必须为11位")]
-        //[StringLength(11, MinimumLength = 11, ErrorMessage = "Phone长度必须为11位
+        //[StringLength(11, MinimumLength = 11, ErrorMessage = "Phone长度必须为11位")]
         [Required(ErrorMessage = "Phone不能为空")]
         [RegularExpression(@"^1[3-9]\d{9}$", ErrorMessage = "手机号格式不正确")]
         public string Phone { get; set; } = null!;
@@ -29,6 +31,7 @@ namespace Admin.NETCore.Core.ViewModels
 
         public DateTime UserExpiryDate { get; set; }
 
+        [Range(0, 1, ErrorMessage = "Status值只能是 0 或 1")]
         public int Status { get; set; }
 
         [Range(1, 10, ErrorMessage = "Level需在0-10范围内")]

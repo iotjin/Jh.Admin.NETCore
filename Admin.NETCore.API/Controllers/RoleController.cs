@@ -45,17 +45,17 @@ namespace Admin.NETCore.API.Controllers
         {
             if (string.IsNullOrEmpty(id))
             {
-                return ApiResult<RoleVModel>.FailResult("id不能为空");
+                return ApiResult<RoleVModel>.FailResult("Id不能为空");
             }
             return await _roleService.GetRoleByIdAsync(id);
         }
 
         [HttpPost]
-        public async Task<ApiResult<string>> DeleteRoleByIdAsync([FromBody] IDRequest request)
+        public async Task<ApiResult<string>> DeleteRoleByIdAsync([FromBody] IdRequest request)
         {
             if (string.IsNullOrEmpty(request.Id))
             {
-                return ApiResult<string>.FailResult("id不能为空");
+                return ApiResult<string>.FailResult("Id不能为空");
             }
             return await _roleService.DeleteRoleByIdAsync(request.Id);
         }
@@ -71,7 +71,7 @@ namespace Admin.NETCore.API.Controllers
         {
             if (string.IsNullOrEmpty(filter.UserId))
             {
-                return ApiResult<List<RoleListDTO>>.FailResult("用户ID不能为空");
+                return ApiResult<List<RoleListDTO>>.FailResult("用户Id不能为空");
             }
             return await _roleService.GetRoleListByUserIdAsync(filter);
         }
