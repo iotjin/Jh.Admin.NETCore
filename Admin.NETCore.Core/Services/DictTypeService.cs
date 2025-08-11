@@ -21,6 +21,8 @@ namespace Admin.NETCore.Core.Services
 
         public async Task<ApiResult<DictTypeVModel>> CreateOrUpdateDictTypeAsync(DictTypeVModel model)
         {
+            var result = new ApiResult<DictTypeVModel>();
+
             bool isNew = string.IsNullOrWhiteSpace(model.Id);
 
             // name 或 code 重复校验（排除当前记录的 Id）
@@ -29,17 +31,17 @@ namespace Admin.NETCore.Core.Services
                 .ToListAsync();
 
             if (exists.Any(m => m.Name == model.Name))
-                return ApiResult<DictTypeVModel>.FailResult("Name已存在");
+                return result.Fail("Name已存在");
 
             if (exists.Any(m => m.Code == model.Code))
-                return ApiResult<DictTypeVModel>.FailResult("Code已存在");
+                return result.Fail("Code已存在");
 
             // 编辑
             if (!isNew)
             {
                 var existModel = await _context.DictType.FindAsync(model.Id);
                 if (existModel == null)
-                    return ApiResult<DictTypeVModel>.FailResult("字典类型不存在");
+                    return result.Fail("字典类型不存在");
 
                 existModel.Name = model.Name;
                 existModel.Code = model.Code;
@@ -51,7 +53,7 @@ namespace Admin.NETCore.Core.Services
 
                 await _context.SaveChangesAsync();
 
-                return ApiResult<DictTypeVModel>.SuccessResult(model, "字典类型更新成功");
+                return result.Success(model, "字典类型更新成功");
             }
             else
             {
@@ -71,12 +73,14 @@ namespace Admin.NETCore.Core.Services
                 await _context.SaveChangesAsync();
 
                 model.Id = dbModel.Id;
-                return ApiResult<DictTypeVModel>.SuccessResult(model, "字典类型创建成功");
+                return result.Success(model, "字典类型创建成功");
             }
         }
 
         public async Task<ApiResult<string>> DeleteDictTypeByIdsAsync(List<string> ids)
         {
+            var result = new ApiResult<string>();
+
             // 查找对应的记录
             var exists = await _context.DictType
                 .Where(m => ids.Contains(m.Id))
@@ -85,13 +89,13 @@ namespace Admin.NETCore.Core.Services
             // 不管传入的 ids 是否都存在，只要能匹配的就删除, 不会报错，也不会终止操作
             if (!exists.Any())
             {
-                return ApiResult<string>.FailResult("未找到任何要删除的字典类型");
+                return result.Fail("未找到任何要删除的字典类型");
             }
 
             //// 如果找到的id和传入的不一致，不删除 （只要有一个 ID 不存在，就全部不删）
             //if (exists.Count != ids.Count)
             //{
-            //    return ApiResult<string>.FailResult("部分字典类型不存在，操作终止");
+            //    return result.Fail("部分字典类型不存在，操作终止");
             //}
 
             _context.DictType.RemoveRange(exists); // 物理删除
@@ -101,7 +105,7 @@ namespace Admin.NETCore.Core.Services
             //}
             await _context.SaveChangesAsync();
 
-            return ApiResult<string>.SuccessResult("", "字典类型删除成功");
+            return result.Success("", "字典类型删除成功");
         }
 
 
@@ -113,10 +117,12 @@ namespace Admin.NETCore.Core.Services
 
         public async Task<ApiResult<DictTypeVModel>> GetDictTypeByIdAsync(string id)
         {
+            var result = new ApiResult<DictTypeVModel>();
+
             var existModel = await _context.DictType.FindAsync(id);
             if (existModel == null)
             {
-                return ApiResult<DictTypeVModel>.FailResult("字典类型不存在");
+                return result.Fail("字典类型不存在");
             }
             var returnModel = new DictTypeVModel
             {
@@ -129,7 +135,7 @@ namespace Admin.NETCore.Core.Services
                 Notes = existModel.Notes,
                 IsDelete = existModel.IsDelete,
             };
-            return ApiResult<DictTypeVModel>.SuccessResult(returnModel);
+            return result.Success(returnModel);
         }
 
         public async Task<PagedResult<DictTypeListDTO>> GetDictTypeListAsync(DictTypeFilterModel filter)
@@ -179,9 +185,11 @@ namespace Admin.NETCore.Core.Services
         // 查询多个字典类型及该类型所对应的字典项，查询结果根据sort升序
         public async Task<ApiResult<DictTypesAndItemsDTO>> GetDictTypesAndItemsAsync(string codes)
         {
+            var result = new ApiResult<DictTypesAndItemsDTO>();
+
             if (string.IsNullOrWhiteSpace(codes))
             {
-                return ApiResult<DictTypesAndItemsDTO>.FailResult("codes不能为空");
+                return result.Fail("codes不能为空");
             }
 
             // 分割并去重
@@ -191,7 +199,7 @@ namespace Admin.NETCore.Core.Services
                                    .ToList();
 
             if (!codeList.Any())
-                return ApiResult<DictTypesAndItemsDTO>.FailResult("codes不能为空");
+                return result.Fail("codes不能为空");
 
             // 查询所有包含这些code的字典项(字典项必须是未删除的)
             var dictItems = await _context.DictItem
@@ -214,17 +222,17 @@ namespace Admin.NETCore.Core.Services
                 );
 
             // 转换为DTO类型
-            var result = new DictTypesAndItemsDTO();
+            var dict = new DictTypesAndItemsDTO();
             foreach (var item in dictResult)
             {
-                result[item.Key] = item.Value;
+                dict[item.Key] = item.Value;
             }
 
 
-            //var result = new DictTypesAndItemsDTO();
+            //var dict = new DictTypesAndItemsDTO();
             //foreach (var group in dictItems.GroupBy(item => item.DictTypeCode))
             //{
-            //    result[group.Key] = group.Select(item => new DictItemSimpleDto
+            //    dict[group.Key] = group.Select(item => new DictItemSimpleDto
             //    {
             //        Id = item.Id,
             //        Label = item.Label,
@@ -232,16 +240,18 @@ namespace Admin.NETCore.Core.Services
             //    }).ToList();
             //}
 
-            return ApiResult<DictTypesAndItemsDTO>.SuccessResult(result);
+            return result.Success(dict);
 
         }
 
 
         public async Task<ApiResult<Dictionary<string, List<DictItemSimpleDto>>>> GetDictTypesAndItems2Async(string codes)
         {
+            var result = new ApiResult<Dictionary<string, List<DictItemSimpleDto>>>();
+
             if (string.IsNullOrWhiteSpace(codes))
             {
-                return ApiResult<Dictionary<string, List<DictItemSimpleDto>>>.FailResult("codes不能为空");
+                return result.Fail("codes不能为空");
             }
 
             // 分割并去重
@@ -251,7 +261,7 @@ namespace Admin.NETCore.Core.Services
                                    .ToList();
 
             if (!codeList.Any())
-                return ApiResult<Dictionary<string, List<DictItemSimpleDto>>>.FailResult("codes不能为空");
+                return result.Fail("codes不能为空");
 
             // 查询所有包含这些code的字典项(字典项必须是未删除的)
             var dictItems = await _context.DictItem
@@ -261,7 +271,7 @@ namespace Admin.NETCore.Core.Services
                 .ToListAsync();
 
             // 按 DictTypeCode 分组并处理成返回的格式
-            var result = dictItems
+            var dict = dictItems
                 .GroupBy(item => item.DictTypeCode)
                 .ToDictionary(
                     g => g.Key,
@@ -273,7 +283,7 @@ namespace Admin.NETCore.Core.Services
                     }).ToList()
                 );
 
-            return ApiResult<Dictionary<string, List<DictItemSimpleDto>>>.SuccessResult(result);
+            return result.Success(dict);
         }
 
     }

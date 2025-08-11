@@ -21,11 +21,13 @@ namespace Admin.NETCore.Core.Services
 
         public async Task<ApiResult<DictItemVModel>> CreateOrUpdateDictItemAsync(DictItemVModel model)
         {
+            var result = new ApiResult<DictItemVModel>();
+
             // 先判断字典类型是否存在
             bool dictTypeExists = await _context.DictType.AnyAsync(m => m.Code == model.DictTypeCode);
             if (!dictTypeExists)
             {
-                return ApiResult<DictItemVModel>.FailResult("字典类型不存在");
+                return result.Fail("字典类型不存在");
             }
 
             bool isNew = string.IsNullOrWhiteSpace(model.Id);
@@ -36,17 +38,17 @@ namespace Admin.NETCore.Core.Services
                 .ToListAsync();
 
             if (exists.Any(m => m.Label == model.Label))
-                return ApiResult<DictItemVModel>.FailResult("Label已存在");
+                return result.Fail("Label已存在");
 
             if (exists.Any(m => m.Value == model.Value))
-                return ApiResult<DictItemVModel>.FailResult("Value已存在");
+                return result.Fail("Value已存在");
 
             // 编辑
             if (!isNew)
             {
                 var existModel = await _context.DictItem.FindAsync(model.Id);
                 if (existModel == null)
-                    return ApiResult<DictItemVModel>.FailResult("字典项不存在");
+                    return result.Fail("字典项不存在");
 
                 existModel.Label = model.Label;
                 existModel.Value = model.Value;
@@ -59,7 +61,7 @@ namespace Admin.NETCore.Core.Services
 
                 await _context.SaveChangesAsync();
 
-                return ApiResult<DictItemVModel>.SuccessResult(model, "字典项更新成功");
+                return result.Success(model, "字典项更新成功");
             }
             else
             {
@@ -80,12 +82,14 @@ namespace Admin.NETCore.Core.Services
                 await _context.SaveChangesAsync();
 
                 model.Id = dbModel.Id;
-                return ApiResult<DictItemVModel>.SuccessResult(model, "字典项创建成功");
+                return result.Success(model, "字典项创建成功");
             }
         }
 
         public async Task<ApiResult<string>> DeleteDictItemByIdsAsync(List<string> ids)
         {
+            var result = new ApiResult<string>();
+
             // 查找对应的记录
             var exists = await _context.DictItem
                 .Where(m => ids.Contains(m.Id))
@@ -94,13 +98,13 @@ namespace Admin.NETCore.Core.Services
             // 不管传入的 ids 是否都存在，只要能匹配的就删除, 不会报错，也不会终止操作
             if (!exists.Any())
             {
-                return ApiResult<string>.FailResult("未找到任何要删除的字典项");
+                return result.Fail("未找到任何要删除的字典项");
             }
 
             //// 如果找到的id和传入的不一致，不删除 （只要有一个 ID 不存在，就全部不删）
             //if (exists.Count != ids.Count)
             //{
-            //    return ApiResult<string>.FailResult("部分字典项不存在，操作终止");
+            //    return result.Fail("部分字典项不存在，操作终止");
             //}
 
             _context.DictItem.RemoveRange(exists); // 物理删除
@@ -110,7 +114,7 @@ namespace Admin.NETCore.Core.Services
             //}
             await _context.SaveChangesAsync();
 
-            return ApiResult<string>.SuccessResult("", "字典项删除成功");
+            return result.Success("", "字典项删除成功");
         }
 
 
@@ -122,10 +126,12 @@ namespace Admin.NETCore.Core.Services
 
         public async Task<ApiResult<DictItemVModel>> GetDictItemByIdAsync(string id)
         {
+            var result = new ApiResult<DictItemVModel>();
+
             var existModel = await _context.DictItem.FindAsync(id);
             if (existModel == null)
             {
-                return ApiResult<DictItemVModel>.FailResult("字典项不存在");
+                return result.Fail("字典项不存在");
             }
             var returnModel = new DictItemVModel
             {
@@ -139,7 +145,7 @@ namespace Admin.NETCore.Core.Services
                 Notes = existModel.Notes,
                 IsDelete = existModel.IsDelete,
             };
-            return ApiResult<DictItemVModel>.SuccessResult(returnModel);
+            return result.Success(returnModel);
         }
 
         public async Task<PagedResult<DictItemListDTO>> GetDictItemListAsync(DictItemFilterModel filter)
