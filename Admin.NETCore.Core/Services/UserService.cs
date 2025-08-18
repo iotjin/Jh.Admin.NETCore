@@ -98,7 +98,8 @@ namespace Admin.NETCore.Core.Services
 
         public async Task<ApiResult<UserVModel>> GetUserByIdAsync(string id)
         {
-            var user = await _context.User.FindAsync(id);
+            //var user = await _context.User.FindAsync(id);
+            var user = await _context.User.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id); // 只读数据用AsNoTracking提高性能
             if (user == null)
             {
                 return ApiResult<UserVModel>.FailResult("用户不存在");

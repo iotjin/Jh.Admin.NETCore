@@ -56,6 +56,7 @@ namespace Admin.NETCore.API.ServiceExtensions
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IDictTypeService, DictTypeService>();
             services.AddScoped<IDictItemService, DictItemService>();
+            services.AddScoped<IMenuService, MenuService>();
             return services;
         }
 

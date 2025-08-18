@@ -117,7 +117,8 @@ namespace Admin.NETCore.Core.Services
 
         public async Task<ApiResult<RoleVModel>> GetRoleByIdAsync(string id)
         {
-            var existModel = await _context.Role.FindAsync(id);
+            //var existModel = await _context.Role.FindAsync(id);
+            var existModel = await _context.Role.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id); // 只读数据用AsNoTracking提高性能
             if (existModel == null)
             {
                 return ApiResult<RoleVModel>.FailResult("角色不存在");

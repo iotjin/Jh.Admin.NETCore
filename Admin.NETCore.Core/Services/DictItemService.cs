@@ -128,7 +128,11 @@ namespace Admin.NETCore.Core.Services
         {
             var result = new ApiResult<DictItemVModel>();
 
-            var existModel = await _context.DictItem.FindAsync(id);
+            //var existModel = await _context.DictItem.FindAsync(id);
+            var existModel = await _context.DictItem
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.Id == id); // 只读数据用AsNoTracking提高性能
+
             if (existModel == null)
             {
                 return result.Fail("字典项不存在");

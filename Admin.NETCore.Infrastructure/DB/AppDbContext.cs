@@ -28,6 +28,7 @@ namespace Admin.NETCore.Infrastructure.DB
         public DbSet<DictType> DictType { get; set; }
         public DbSet<DictItem> DictItem { get; set; }
 
+        public DbSet<Menu> Menu { get; set; }
 
 
 
